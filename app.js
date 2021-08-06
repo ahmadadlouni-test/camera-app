@@ -137,7 +137,7 @@ const exitFullSCreen = async () => {
     console.log('Entering exitFullSCreen() function');
     const body = document.body;
     try {
-        const data = await body.exitFullSCreen();
+        const data = await body.exitFullScreen();
         console.log('full screen data', data);
     } catch (e) {
         console.log('error in exiting full screen', e);
@@ -201,7 +201,7 @@ cameraTrigger.onclick = function() {
 
     if (outputTaken.back) {
         exitFullSCreen();
-        
+
         cameraTrigger.style.display = 'none';
 
         // stop the camera
