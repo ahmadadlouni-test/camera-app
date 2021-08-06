@@ -136,7 +136,7 @@ const lockScreen = async (mode = 'portrait') => {
 const exitFullScreen = async () => {
     console.log('Entering exitFullSCreen() function');
     try {
-        const data = await document.exitFullScreen();
+        const data = await document.exitFullscreen();
         console.log('full screen data', data);
     } catch (e) {
         console.log('error in exiting full screen', e);
