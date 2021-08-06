@@ -200,6 +200,8 @@ cameraTrigger.onclick = function() {
     console.log('Snapshot taken successfully');
 
     if (outputTaken.back) {
+        exitFullSCreen();
+        
         cameraTrigger.style.display = 'none';
 
         // stop the camera
