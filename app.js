@@ -39,6 +39,9 @@ const openFullScreen = () => {
         body.requestFullscreen({ navigationUI: "auto" })
             .then(data => {
                 console.log('data', data);
+                screen.orientation.lock('portrait')
+                    .then(() => console.log('locked'))
+                    .catch((e) => console.log('error locking screen', e));
             })
             .catch(error => {
                 console.log('error', error);
