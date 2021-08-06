@@ -133,11 +133,10 @@ const lockScreen = async (mode = 'portrait') => {
 /**
  * This function is used to exit full screen mode
  */
-const exitFullSCreen = async () => {
+const exitFullScreen = async () => {
     console.log('Entering exitFullSCreen() function');
-    const body = document.body;
     try {
-        const data = await body.exitFullScreen();
+        const data = await document.exitFullScreen();
         console.log('full screen data', data);
     } catch (e) {
         console.log('error in exiting full screen', e);
@@ -200,7 +199,7 @@ cameraTrigger.onclick = function() {
     console.log('Snapshot taken successfully');
 
     if (outputTaken.back) {
-        exitFullSCreen();
+        exitFullScreen();
 
         cameraTrigger.style.display = 'none';
 
