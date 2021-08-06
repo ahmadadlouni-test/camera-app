@@ -1,6 +1,6 @@
 // Set constraints for the video stream
-// var constraints = { video: { facingMode: 'environment', width: 600, height: 378 }, audio: false };
-var constraints = { video: { facingMode: 'environment', width: 378, height: 600 }, audio: false };
+var constraints = { video: { facingMode: 'environment', width: 600, height: 378 }, audio: false };
+// var constraints = { video: { facingMode: 'environment', width: 378, height: 600 }, audio: false };
 var track = null;
 
 const playCameraShutterSound = () => {
@@ -31,23 +31,20 @@ const cameraView = document.querySelector("#camera--view"),
     cardSideText = document.querySelector("#cardSideText");
 
 
+const openFullScreen = () => {
 
-const toggleFullscreen = () => {
-    let elem = document.querySelector("#camera");
-  
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullScreen) {
-        elem.webkitRequestFullScreen();
-    }
-
-    screen.orientation.lock("portrait")
-	.then(function() {
-		alert('Locked');
-	})
-	.catch(function(error) {
-		alert(error);
-	});
+    setTimeout(() => {
+        console.log('Enter Full Screen Mode');
+        const body = document.body;
+        body.requestFullscreen({ navigationUI: "auto" })
+            .then(data => {
+                console.log('data', data);
+            })
+            .catch(error => {
+                console.log('error', error);
+            });
+    }, 1000);
+    
     //   elem.requestFullscreen().catch(err => {
     //     alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
     //   });
@@ -56,9 +53,20 @@ const toggleFullscreen = () => {
     // }
   }
 
+  const exitFullSCreen = () => {
+      console.log('Exit Full Screen Mode');
+      const body = document.body;
+      body.exitFullSCreen()
+        .then(data => {
+            console.log('data', data);
+        })
+        .catch(error => {
+            console.log('error', error);
+        })
+  }
+
 // Access the device camera and stream to cameraView
 const cameraStart = () => {
-    // toggleFullscreen();
     adjustScreen();
     navigator.mediaDevices
         .getUserMedia(constraints)
@@ -67,9 +75,18 @@ const cameraStart = () => {
             cameraView.srcObject = stream;
         })
         .catch(function(error) {
+            console.log(error);
             console.error("Oops. Something is broken.", error);
         });
 }
+
+document.getElementById('openCameraButton').onclick = function () {
+    openFullScreen();
+    this.style.display = 'none'
+    document.getElementById('camera').style.display = '';
+    cameraStart();
+}
+
 
 const isMediaDevicesSupported = () => 'mediaDevices' in navigator;
 
@@ -125,11 +142,11 @@ const isLandscapeMode = () => window.matchMedia('(orientation: landscape)').matc
 // Start the video stream when the window loads
 if (isMobileDevice()) {
     console.log('mobile/tablet device');
-    window.addEventListener('load', cameraStart, false);
+    // window.addEventListener('load', cameraStart, false);
 }
 else {
     console.log('desktop device');
-    window.addEventListener('load', cameraStart, false);
+    // window.addEventListener('load', cameraStart, false);
 }
 
 window.onresize = function (e) {
