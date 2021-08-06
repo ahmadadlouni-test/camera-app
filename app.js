@@ -1,5 +1,6 @@
 // Set constraints for the video stream
-var constraints = { video: { facingMode: 'environment', width: 600, height: 378 }, audio: false };
+// var constraints = { video: { facingMode: 'environment', width: 600, height: 378 }, audio: false };
+var constraints = { video: { facingMode: 'environment', width: 378, height: 600 }, audio: false };
 var track = null;
 
 const playCameraShutterSound = () => {
