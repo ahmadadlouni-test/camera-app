@@ -70,8 +70,8 @@ const constraints = {
     video: { 
         resizeMode: 'crop-and-scale',
         facingMode: { exact: 'environment' }, 
-        width: { ideal: 10000 }, 
-        height: { ideal: 10000 } 
+        width: { ideal: 60000 }, 
+        height: { ideal: 60000 } 
     }, 
     audio: false 
 };
@@ -80,8 +80,8 @@ const secondConstraints = {
     video: { 
         resizeMode: 'crop-and-scale',
         facingMode: { exact: 'environment' }, 
-        width: { min: 10000, max: 10000 }, 
-        height: { min: 10000, max: 10000 } 
+        width: { min: 60000, max: 60000 }, 
+        height: { min: 60000, max: 60000 } 
     }, 
     audio: false 
 };
@@ -90,8 +90,8 @@ const thirdConstraint = {
     video: { 
         resizeMode: 'crop-and-scale',
         facingMode: { exact: 'environment' }, 
-        width: { min: 10000, max: 10000 }, 
-        height: { min: 10000, max: 10000 } 
+        width: { min: 60000, max: 60000 }, 
+        height: { min: 60000, max: 60000 } 
     }, 
     audio: false 
 };
