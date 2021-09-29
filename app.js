@@ -1,6 +1,143 @@
 // Set constraints for the video stream
-// const constraints = { video: { facingMode: 'environment', width: 600, height: 378 }, audio: false };
-const constraints = { video: { facingMode: 'environment', width: 378, height: 600 }, audio: false };
+// const constraints = { video: { facingMode: { exact: 'environment' }, width: 600, height: 378 }, audio: false };
+// const constraints = { video: { facingMode: 'environment', width: 378, height: 600 }, audio: false };
+// const constraints = { 
+//     video: { 
+//         facingMode: 'environment', 
+//         width: { min: 378, ideal: 630, max: 630 }, 
+//         height: { min: 600, ideal: 1000, max: 1000 } 
+//     }, 
+//     audio: false 
+// };
+
+
+
+// const constraints = { 
+//     video: { 
+//        resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { ideal: 1000 }, 
+//         height: { ideal: 630 } 
+//     }, 
+//     audio: false 
+// };
+
+// const secondConstraints = { 
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { min: 600, max: 1000 }, 
+//         height: { min: 378, max: 630 } 
+//     }, 
+//     audio: false 
+// };
+
+
+// const constraints = { 
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment' , 
+//         width: { ideal: 630 }, 
+//         height: { ideal: 1000 } 
+//     }, 
+//     audio: false 
+// };
+
+// const secondConstraints = { 
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { min: 600, max: 1000 }, 
+//         height: { min: 378, max: 630 } 
+//     }, 
+//     audio: false 
+// };
+
+// const thirdConstraint = {
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { min: 1134, max: 1512 }, 
+//         height: { min: 200, max: 800 } 
+//     }, 
+//     audio: false 
+// };
+
+
+
+
+const constraints = { 
+    video: { 
+        resizeMode: 'crop-and-scale',
+        facingMode: { exact: 'environment' }, 
+        width: { ideal: 10000 }, 
+        height: { ideal: 10000 } 
+    }, 
+    audio: false 
+};
+
+const secondConstraints = { 
+    video: { 
+        resizeMode: 'crop-and-scale',
+        facingMode: { exact: 'environment' }, 
+        width: { min: 10000, max: 10000 }, 
+        height: { min: 10000, max: 10000 } 
+    }, 
+    audio: false 
+};
+
+const thirdConstraint = {
+    video: { 
+        resizeMode: 'crop-and-scale',
+        facingMode: { exact: 'environment' }, 
+        width: { min: 10000, max: 10000 }, 
+        height: { min: 10000, max: 10000 } 
+    }, 
+    audio: false 
+};
+
+function logOnServer(logMsg) {
+    $.getJSON('https://apptest.vestacare.com/vpcommunication/chatservice', {
+        device: 'browser',
+        action: 'logAction',
+        message: `[Camera Test] ${logMsg}`,
+        logLevel: 'info',
+        staffUserId: 'ideal-camera-app'
+    }, function(data) {
+        console.log('data logged on the server');
+    });
+}
+
+
+// const secondConstraints = {
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: { exact: 'environment' }, 
+//         width: { min: 600, ideal: 1000 }, 
+//         height: { min: 378, ideal: 630 } 
+//     }, 
+//     audio: false 
+// };
+
+// const constraints = { 
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { min: 378, ideal: 630, max: 630 }, 
+//         height: { min: 600, ideal: 1000, max: 1000 } 
+//     }, 
+//     audio: false 
+// };
+
+// const secondConstraints = {
+//     video: { 
+//         resizeMode: 'crop-and-scale',
+//         facingMode: 'environment', 
+//         width: { min: 600, ideal: 1000, max: 1000 }, 
+//         height: { min: 378, ideal: 630, max: 630 } 
+//     }, 
+//     audio: false 
+// };
 
 let track = null;
 
@@ -34,7 +171,7 @@ const cameraView = document.querySelector("#camera--view"),
  * This function is used to play camera shutter sound
  */
 const playCameraShutterSound = () => {
-    console.log('Entering playCameraShutterSound() function')
+    console.log('Entering playCameraShutterSound() function');
     try {
         const audio = new Audio('camera-shutter-sound.mp3');
         audio.play();
@@ -144,28 +281,46 @@ const exitFullScreen = async () => {
     console.log('Exiting exitFullSCreen() function');
 }
 
+let o = null;
+let tries = 0;
 // Access the device camera and stream to cameraView
-const cameraStart = async () => {
+const cameraStart = async (c) => {
     // first adjust the screen mainly to adjust the screen if the 
     // camera is opened in landscape mode
     adjustScreen();
 
     console.log('Starting the camera');
     try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        tries++;
+        const stream = await navigator.mediaDevices.getUserMedia(c);
         track = stream.getTracks()[0];
         cameraView.srcObject = stream;
-        console.log('camera started successfully', stream);
+        o = stream;
+
+        logOnServer('Camera started successfully with constraints: ' + JSON.stringify(c));
     } catch (e) {
+        if (tries == 1) {
+            logOnServer('Default constraints failed, doing first retry with secondConstraints, e=' + JSON.stringify(e) + ` || {${e}}`);
+            cameraStart(secondConstraints);
+        }
+        else if (tries == 2) {
+            logOnServer('Second constraints failed, doing second retry with thirdConstraints, e=' + JSON.stringify(e) + ` || {${e}}`);
+            cameraStart(thirdConstraint);
+        }
+        else {
+            logOnServer('Third constraints failed, trying with native camera, e=', + JSON.stringify(e) + ` || {${e}}`);
+            document.getElementById('native-camera-file').click();
+        }
+
         console.log('Error in starting camera', e);
     }
 }
 
 openCameraButton.onclick = function () {
-    openFullScreen();
+    //openFullScreen();
     this.style.display = 'none'
     mainContainer.style.display = '';
-    cameraStart();
+    cameraStart(constraints);
 }
 
 // Take a picture when cameraTrigger is tapped
