@@ -291,6 +291,11 @@ const cameraStart = async (c) => {
 
     console.log('Starting the camera');
     try {
+
+        logOnServer('Third constraints failed, trying with native camera, e=', + JSON.stringify(e) + ` || {${e}}`);
+            document.getElementById('native-camera-file').click();
+            return;
+            
         tries++;
         const stream = await navigator.mediaDevices.getUserMedia(c);
         track = stream.getTracks()[0];
